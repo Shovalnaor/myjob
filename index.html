@@ -103,8 +103,6 @@
         .bg-rejected { background-color: #fff5f5; color: var(--danger); }
         .bg-pending { background-color: #fffff0; color: var(--warning); }
         
-        .overdue-date { color: var(--danger); font-weight: bold; background-color: #fff5f5; padding: 2px 6px; border-radius: 4px; }
-
         .btn-icon { background: none; border: none; cursor: pointer; font-size: 1.2rem; margin-left: 5px; opacity: 0.7; transition: 0.2s;}
         .btn-icon:hover { opacity: 1; transform: scale(1.1); }
 
@@ -183,7 +181,7 @@
                         <option value="all">כל הסטטוסים</option>
                         <option value="sent">נשלח</option>
                         <option value="pending">ממתין</option>
-                        <option value="interview">ראיון</option>
+                        <option value="interview">ראיונות</option>
                         <option value="rejected">סורב</option>
                     </select>
                 </div>
@@ -244,31 +242,30 @@
     </div>
 
     <script type="module">
-        // --- Firebase Integration ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // !!! החלף את הפרטים כאן בפרטים מה-Firebase Console שלך !!!
+        // Firebase Configuration - Corrected URL and syntax
         const firebaseConfig = {
           apiKey: "AIzaSyBpcWFE8nLPo2FqOMQJmhLpKsTpdeYxtBM",
           authDomain: "myjob-a98c8.firebaseapp.com",
-          databaseURL: "https://myjob-a98c8-default-rtdb.europe-west1.firebasedatabase.app",
+          databaseURL: "https://myjob-a98c8-default-rtdb.europe-west1.firebasedatabase.app/", 
           projectId: "myjob-a98c8",
           storageBucket: "myjob-a98c8.firebasestorage.app",
           messagingSenderId: "252793031293",
           appId: "1:252793031293:web:49565d2a12c74291a67f14",
-           measurementId: "G-Z8662VY9SS"
+          measurementId: "G-Z8662VY9SS"
         };
 
-        const app =initializeApp(firebaseConfig);
+        const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         const jobsRef = ref(db, 'jobs');
-        const analytics = getAnalytics(app);
+
         let jobs = [];
         let chartStatusInstance = null;
         let chartActivityInstance = null;
 
-        // --- Core Logic ---
+        // Initialize and listen for cloud updates
         function init() {
             onValue(jobsRef, (snapshot) => {
                 const data = snapshot.val();
@@ -277,6 +274,7 @@
                 document.getElementById('syncStatus').innerText = "● מסונכרן לענן";
                 document.getElementById('syncStatus').style.color = "var(--success)";
             }, (error) => {
+                console.error(error);
                 document.getElementById('syncStatus').innerText = "● שגיאת סנכרון";
                 document.getElementById('syncStatus').style.color = "var(--danger)";
             });
@@ -286,7 +284,7 @@
             set(jobsRef, jobs);
         }
 
-        // --- UI & Global Functions (Attached to window) ---
+        // Global functions attached to window for HTML access
         window.switchView = (viewName) => {
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
@@ -379,7 +377,6 @@
             });
         };
 
-        // --- Rendering ---
         function renderDashboard() {
             renderTable();
             document.getElementById('totalJobs').innerText = jobs.length;
@@ -411,16 +408,28 @@
             const ctxS = document.getElementById('statusChart').getContext('2d');
             if(chartStatusInstance) chartStatusInstance.destroy();
             const sCounts = {sent:0, pending:0, interview:0, rejected:0};
-            jobs.forEach(j => sCounts[j.status]++);
+            jobs.forEach(j => { if(sCounts[j.status] !== undefined) sCounts[j.status]++; });
             chartStatusInstance = new Chart(ctxS, {
                 type: 'doughnut',
                 data: {
                     labels: ['נשלח', 'ממתין', 'ראיון', 'סורב'],
                     datasets: [{ data: Object.values(sCounts), backgroundColor: ['#3182ce', '#d69e2e', '#38a169', '#e53e3e'] }]
                 },
-                options: { plugins: { legend: { position: 'bottom' } } }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
             });
-            // (Activity chart logic can be added here similarly)
+
+            const ctxA = document.getElementById('activityChart').getContext('2d');
+            if(chartActivityInstance) chartActivityInstance.destroy();
+            const dates = {};
+            jobs.forEach(j => { const d = j.date.substring(5); dates[d] = (dates[d] || 0) + 1; });
+            chartActivityInstance = new Chart(ctxA, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(dates).sort(),
+                    datasets: [{ label: 'הגשות', data: Object.keys(dates).sort().map(d => dates[d]), backgroundColor: '#2d3748', borderRadius: 4 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+            });
         }
 
         function translateStatus(s) {
