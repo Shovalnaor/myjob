@@ -39,6 +39,7 @@
             flex-direction: column;
             padding: 20px;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            flex-shrink: 0;
         }
 
         .logo { font-size: 1.4rem; font-weight: 700; margin-bottom: 40px; }
@@ -84,7 +85,7 @@
         .charts-wrapper { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 30px; height: 300px;}
         .chart-box { background: var(--card-bg); padding: 15px; border-radius: 12px; position: relative; }
 
-        .table-wrapper { background: var(--card-bg); padding: 20px; border-radius: 12px; }
+        .table-wrapper { background: var(--card-bg); padding: 20px; border-radius: 12px; overflow-x: auto; }
         
         .filters-container { display: flex; gap: 15px; margin-bottom: 20px; }
         .search-box, .status-filter { 
@@ -93,7 +94,7 @@
         .search-box { flex: 1; }
         .status-filter { width: 200px; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; min-width: 600px; }
         th { text-align: right; padding: 15px; color: var(--text-muted); border-bottom: 2px solid #edf2f7; }
         td { padding: 15px; border-bottom: 1px solid #edf2f7; }
         
@@ -128,6 +129,31 @@
         .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px; border-top: 1px solid #edf2f7; padding-top: 15px;}
         .btn-cancel { background: #e2e8f0; color: var(--text-main); padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;}
 
+        /* === MOBILE RESPONSIVE === */
+        @media (max-width: 768px) {
+            body { flex-direction: column; height: auto; overflow-y: auto; }
+            .sidebar { width: 100%; height: auto; padding: 15px; }
+            .logo { margin-bottom: 15px; text-align: center; }
+            .nav-item { justify-content: center; margin-bottom: 5px; }
+            .sidebar-footer { padding-top: 10px; }
+            
+            .main-content { padding: 15px; }
+            .top-bar { flex-direction: column; text-align: center; gap: 15px; }
+            
+            .kpi-container { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .card { padding: 15px; }
+            .card .value { font-size: 1.4rem; }
+            
+            .charts-wrapper { grid-template-columns: 1fr; height: auto; }
+            .chart-box { height: 250px; }
+            
+            .filters-container { flex-direction: column; }
+            .status-filter { width: 100%; }
+            
+            .form-grid { grid-template-columns: 1fr; }
+            .form-group.full-width { grid-column: span 1; }
+        }
+
         /* View Modal Styles */
         .view-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
         .detail-item { background: #f7fafc; padding: 12px; border-radius: 8px; border: 1px solid #edf2f7; }
@@ -145,7 +171,7 @@
         <div class="nav-item" id="nav-jobs" onclick="switchView('jobs')">💼 המשרות שלי</div>
 
         <div class="sidebar-footer">
-            <p style="font-size: 0.8rem; color: #718096; text-align: center;">מסונכרן לענן ☁️</p>
+            <p style="font-size: 0.75rem; color: #718096; text-align: center;">מסונכרן לענן ☁️</p>
             <button class="btn-backup" onclick="exportData()">💾 הורד גיבוי JSON</button>
         </div>
     </div>
@@ -181,7 +207,7 @@
                         <option value="all">כל הסטטוסים</option>
                         <option value="sent">נשלח</option>
                         <option value="pending">ממתין</option>
-                        <option value="interview">ראיונות</option>
+                        <option value="interview">ראיון</option>
                         <option value="rejected">סורב</option>
                     </select>
                 </div>
@@ -210,7 +236,7 @@
                 <div class="form-grid">
                     <div class="form-group"><label>חברה *</label><input type="text" id="inputCompany" required></div>
                     <div class="form-group"><label>תפקיד *</label><input type="text" id="inputRole" required></div>
-                    <div class="form-group"><label>לינק</label><input type="url" id="inputLink"></div>
+                    <div class="form-group"><label>לינק</label><input type="url" id="inputLink" placeholder="https://..."></div>
                     <div class="form-group"><label>סטטוס</label>
                         <select id="inputStatus">
                             <option value="sent">נשלח</option>
@@ -245,7 +271,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // Firebase Configuration - Corrected URL and syntax
         const firebaseConfig = {
           apiKey: "AIzaSyBpcWFE8nLPo2FqOMQJmhLpKsTpdeYxtBM",
           authDomain: "myjob-a98c8.firebaseapp.com",
@@ -265,7 +290,6 @@
         let chartStatusInstance = null;
         let chartActivityInstance = null;
 
-        // Initialize and listen for cloud updates
         function init() {
             onValue(jobsRef, (snapshot) => {
                 const data = snapshot.val();
@@ -284,7 +308,6 @@
             set(jobsRef, jobs);
         }
 
-        // Global functions attached to window for HTML access
         window.switchView = (viewName) => {
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
