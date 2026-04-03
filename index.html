@@ -257,13 +257,13 @@
           storageBucket: "myjob-a98c8.firebasestorage.app",
           messagingSenderId: "252793031293",
           appId: "1:252793031293:web:49565d2a12c74291a67f14"
-          measurementId: "G-Z8662VY9SS"
+           measurementId: "G-Z8662VY9SS"
         };
 
-        const app = initializeApp(firebaseConfig);
+        const app =initializeApp(firebaseConfig);
         const db = getDatabase(app);
         const jobsRef = ref(db, 'jobs');
-
+        const analytics = getAnalytics(app);
         let jobs = [];
         let chartStatusInstance = null;
         let chartActivityInstance = null;
