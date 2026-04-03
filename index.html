@@ -100,34 +100,12 @@
         
         .badge { padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; display: inline-block;}
         .bg-sent { background-color: #ebf8ff; color: var(--accent); }
+        .bg-pending { background-color: #fffff0; color: var(--warning); }
         .bg-interview { background-color: #f0fff4; color: var(--success); }
         .bg-rejected { background-color: #fff5f5; color: var(--danger); }
-        .bg-pending { background-color: #fffff0; color: var(--warning); }
         
         .btn-icon { background: none; border: none; cursor: pointer; font-size: 1.2rem; margin-left: 5px; opacity: 0.7; transition: 0.2s;}
         .btn-icon:hover { opacity: 1; transform: scale(1.1); }
-
-        /* === MODAL === */
-        .modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center;
-        }
-        .modal-content {
-            background: white; padding: 30px; border-radius: 12px; width: 700px; max-width: 95vw;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: flex; flex-direction: column; max-height: 90vh; overflow-y: auto;
-        }
-        
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .form-group { margin-bottom: 5px; }
-        .form-group.full-width { grid-column: span 2; }
-        
-        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; color: var(--text-main); font-size: 0.9rem;}
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px; box-sizing: border-box; font-family: 'Rubik', sans-serif;
-        }
-        
-        .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px; border-top: 1px solid #edf2f7; padding-top: 15px;}
-        .btn-cancel { background: #e2e8f0; color: var(--text-main); padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;}
 
         /* === MOBILE RESPONSIVE === */
         @media (max-width: 768px) {
@@ -153,6 +131,28 @@
             .form-grid { grid-template-columns: 1fr; }
             .form-group.full-width { grid-column: span 1; }
         }
+
+        /* === MODALS === */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background: white; padding: 30px; border-radius: 12px; width: 700px; max-width: 95vw;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: flex; flex-direction: column; max-height: 90vh; overflow-y: auto;
+        }
+        
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .form-group { margin-bottom: 5px; }
+        .form-group.full-width { grid-column: span 2; }
+        
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; color: var(--text-main); font-size: 0.9rem;}
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px; box-sizing: border-box; font-family: 'Rubik', sans-serif;
+        }
+        
+        .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px; border-top: 1px solid #edf2f7; padding-top: 15px;}
+        .btn-cancel { background: #e2e8f0; color: var(--text-main); padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;}
 
         /* View Modal Styles */
         .view-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
@@ -371,13 +371,18 @@
 
         window.openViewModal = (id) => {
             const job = jobs.find(j => j.id === id);
+            if (!job) return;
+
             const content = `
-                <div class="detail-item"><div class="detail-label">חברה</div><div>${job.company}</div></div>
-                <div class="detail-item"><div class="detail-label">תפקיד</div><div>${job.role}</div></div>
-                <div class="detail-item"><div class="detail-label">סטטוס</div><div class="badge bg-${job.status}">${translateStatus(job.status)}</div></div>
-                <div class="detail-item"><div class="detail-label">תאריך</div><div>${job.date}</div></div>
-                <div class="detail-item full-width"><div class="detail-label">הערות</div><div style="white-space:pre-wrap">${job.notes || '-'}</div></div>
+                <div class="detail-item"><div class="detail-label">חברה</div><div class="detail-value">${job.company}</div></div>
+                <div class="detail-item"><div class="detail-label">תפקיד</div><div class="detail-value">${job.role}</div></div>
+                <div class="detail-item"><div class="detail-label">סטטוס</div><div class="detail-value"><span class="badge bg-${job.status}">${translateStatus(job.status)}</span></div></div>
+                <div class="detail-item"><div class="detail-label">תאריך הגשה</div><div class="detail-value">${job.date}</div></div>
+                <div class="detail-item"><div class="detail-label">לינק למשרה</div><div class="detail-value">${job.link ? `<a href="${job.link}" target="_blank" style="color: var(--accent); text-decoration: none;">🔗 פתח קישור</a>` : '-'}</div></div>
+                <div class="detail-item"><div class="detail-label">תאריך פולו-אפ</div><div class="detail-value">${job.followUp || '-'}</div></div>
+                <div class="detail-item full-width"><div class="detail-label">הערות וצעדים הבאים</div><div class="detail-value" style="white-space:pre-wrap">${job.notes || '-'}</div></div>
             `;
+            
             document.getElementById('viewDetailsContent').innerHTML = content;
             document.getElementById('viewJobModal').style.display = 'flex';
         };
@@ -419,9 +424,9 @@
                     <td>${job.date}</td>
                     <td>${job.followUp || '-'}</td>
                     <td>
-                        <button class="btn-icon" onclick="openViewModal(${job.id})">👁️</button>
-                        <button class="btn-icon" onclick="openEditModal(${job.id})">✏️</button>
-                        <button class="btn-icon" onclick="deleteJob(${job.id})">🗑️</button>
+                        <button class="btn-icon" onclick="openViewModal(${job.id})" title="פרטים">👁️</button>
+                        <button class="btn-icon" onclick="openEditModal(${job.id})" title="עריכה">✏️</button>
+                        <button class="btn-icon" onclick="deleteJob(${job.id})" title="מחיקה">🗑️</button>
                     </td>
                 </tr>
             `).join('');
