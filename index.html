@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JobOS - Cloud Full Edition</title>
+    <title>JobOS - Professional Cloud Edition</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet">
     
@@ -28,6 +28,8 @@
             display: flex;
             height: 100vh;
             overflow: hidden;
+            /* מוסתר כברירת מחדל עד להתחברות */
+            display: none; 
         }
 
         /* === Sidebar === */
@@ -40,10 +42,9 @@
             padding: 20px;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
             flex-shrink: 0;
-            transition: 0.3s;
         }
 
-        .logo { font-size: 1.4rem; font-weight: 700; margin-bottom: 40px; color: #fff; }
+        .logo { font-size: 1.4rem; font-weight: 700; margin-bottom: 40px; }
         
         .nav-item { 
             padding: 12px 15px; margin-bottom: 8px; border-radius: 8px; cursor: pointer; 
@@ -54,11 +55,12 @@
 
         .sidebar-footer { margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
         
-        .btn-backup {
+        .btn-sidebar {
             width: 100%; background-color: transparent; border: 1px solid #4a5568; color: #cbd5e0;
             padding: 10px; margin-bottom: 10px; border-radius: 6px; cursor: pointer;
-            text-align: right; transition: 0.2s; display: flex; align-items: center; gap: 10px;
+            text-align: right; font-size: 0.85rem; display: flex; align-items: center; gap: 10px;
         }
+        .btn-sidebar:hover { background-color: #2d3748; color: white; }
 
         /* === Main Content === */
         .main-content { flex: 1; padding: 30px; overflow-y: auto; }
@@ -120,17 +122,17 @@
             width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; font-family: inherit;
         }
 
-        /* === VIEW MODAL STYLING === */
+        /* View Modal Details Styling */
         .view-details-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
         .detail-item { background: #f8fafc; padding: 15px; border-radius: 10px; border: 1px solid #f1f5f9; }
-        .detail-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-bottom: 5px; }
+        .detail-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin-bottom: 5px; }
         .detail-value { font-weight: 600; color: var(--text-main); font-size: 1rem; }
         .detail-item.full-width { grid-column: span 2; }
-        .req-container { background: #fff; padding: 15px; border: 1px solid #e2e8f0; border-radius: 8px; max-height: 250px; overflow-y: auto; white-space: pre-wrap; font-size: 0.9rem; line-height: 1.6; }
+        .req-container { background: #fff; padding: 15px; border: 1px solid #e2e8f0; border-radius: 8px; max-height: 300px; overflow-y: auto; white-space: pre-wrap; font-size: 0.9rem; line-height: 1.6; }
 
         /* === MOBILE RESPONSIVE === */
         @media (max-width: 768px) {
-            body { flex-direction: column; height: auto; overflow-y: auto; }
+            body { flex-direction: column; height: auto; overflow-y: auto; display: none; }
             .sidebar { width: 100%; height: auto; padding: 15px; }
             .logo { margin-bottom: 15px; text-align: center; }
             .nav-item { justify-content: center; }
@@ -153,8 +155,8 @@
         <div class="nav-item" id="nav-jobs" onclick="switchView('jobs')">💼 המשרות שלי</div>
         
         <div class="sidebar-footer">
-            <p style="font-size: 0.7rem; color: #cbd5e0; text-align: center; margin-bottom: 10px;">סנכרון ענן פעיל ☁️</p>
-            <button class="btn-backup" onclick="exportData()">💾 גיבוי JSON למחשב</button>
+            <button class="btn-sidebar" onclick="exportData()">💾 גיבוי JSON</button>
+            <button class="btn-sidebar" style="border-color: var(--danger); color: var(--danger);" onclick="logout()">🔒 התנתק מהמערכת</button>
         </div>
     </div>
 
@@ -162,7 +164,7 @@
         <div class="top-bar">
             <div>
                 <h1>ניהול קריירה חכם</h1>
-                <p id="syncStatus" style="color: var(--success); font-weight: 600;">● מחובר ל-Firebase</p>
+                <p id="syncStatus" style="color: var(--success); font-weight: 600;">● מאובטח ומסונכרן</p>
             </div>
             <button class="btn-primary" onclick="openAddModal()">+ הוסף משרה חדשה</button>
         </div>
@@ -217,8 +219,8 @@
                 <div class="form-grid">
                     <div class="form-group"><label>חברה *</label><input type="text" id="inputCompany" required></div>
                     <div class="form-group"><label>תפקיד *</label><input type="text" id="inputRole" required></div>
-                    <div class="form-group"><label>לינק למשרה</label><input type="url" id="inputLink" placeholder="https://..."></div>
-                    <div class="form-group"><label>איש קשר / מקור</label><input type="text" id="inputContact"></div>
+                    <div class="form-group"><label>לינק למשרה (URL)</label><input type="url" id="inputLink" placeholder="https://..."></div>
+                    <div class="form-group"><label>איש קשר / מגייס</label><input type="text" id="inputContact"></div>
                     <div class="form-group">
                         <label>סטטוס</label>
                         <select id="inputStatus">
@@ -231,12 +233,13 @@
                     <div class="form-group"><label>תאריך הגשה</label><input type="date" id="inputDate" required></div>
                     <div class="form-group"><label>שכר מצופה</label><input type="number" id="inputExpected"></div>
                     <div class="form-group"><label>שכר שהוצע</label><input type="number" id="inputOffered"></div>
-                    <div class="form-group full-width"><label>הערות / צעדים הבאים</label><textarea id="inputNotes" rows="2"></textarea></div>
-                    <div class="form-group full-width"><label>תיאור ודרישות תפקיד</label><textarea id="inputRequirements" rows="6"></textarea></div>
+                    <div class="form-group"><label>תאריך פולו-אפ</label><input type="date" id="inputFollowUp"></div>
+                    <div class="form-group full-width"><label>הערות אישיות / Next Steps</label><textarea id="inputNotes" rows="2"></textarea></div>
+                    <div class="form-group full-width"><label>תיאור ודרישות תפקיד מלאות</label><textarea id="inputRequirements" rows="6"></textarea></div>
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn-cancel" onclick="closeModal('jobModal')">ביטול</button>
-                    <button type="submit" class="btn-primary">שמור שינויים</button>
+                    <button type="submit" class="btn-primary">שמור משרה</button>
                 </div>
             </form>
         </div>
@@ -244,7 +247,7 @@
 
     <div class="modal-overlay" id="viewJobModal">
         <div class="modal-content">
-            <h2 id="viewTitle" style="border-bottom: 2px solid var(--accent); padding-bottom: 10px;">פרטי משרה מלאים</h2>
+            <h2 id="viewTitle" style="border-bottom: 2px solid var(--accent); padding-bottom: 10px;">פרטי משרה</h2>
             <div class="view-details-grid" id="viewDetailsContent"></div>
             <div class="modal-actions">
                 <button type="button" class="btn-cancel" style="width: 100%;" onclick="closeModal('viewJobModal')">סגור</button>
@@ -253,10 +256,11 @@
     </div>
 
     <script type="module">
+        // Firebase Auth & Database Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyBpcWFE8nLPo2FqOMQJmhLpKsTpdeYxtBM",
             authDomain: "myjob-a98c8.firebaseapp.com",
@@ -269,23 +273,48 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
+        const auth = getAuth(app);
         const jobsRef = ref(db, 'jobs');
 
         let jobs = [];
         let chartStatus = null, chartActivity = null;
 
+        // Auth Protection Logic
         function init() {
-            onValue(jobsRef, (snapshot) => {
-                const data = snapshot.val();
-                jobs = data || [];
-                renderDashboard();
-            }, (error) => {
-                console.error("Firebase Error:", error);
-                document.getElementById('syncStatus').innerText = "● שגיאת סנכרון";
-                document.getElementById('syncStatus').style.color = "var(--danger)";
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // המשתמש מחובר - הצג את האתר וטען נתונים
+                    document.body.style.display = "flex"; 
+                    onValue(jobsRef, (snapshot) => {
+                        jobs = snapshot.val() || [];
+                        renderDashboard();
+                    });
+                } else {
+                    // לא מחובר - הסתר הכל ובקש התחברות
+                    document.body.style.display = "none";
+                    window.login();
+                }
             });
         }
 
+        window.login = async () => {
+            const email = prompt("הכנס אימייל מורשה:");
+            const password = prompt("הכנס סיסמה:");
+            if (email && password) {
+                try {
+                    await signInWithEmailAndPassword(auth, email, password);
+                } catch (error) {
+                    alert("פרטי גישה שגויים!");
+                    window.location.reload();
+                }
+            }
+        };
+
+        window.logout = () => {
+            if(confirm("להתנתק מהמערכת?")) signOut(auth);
+        };
+
+        // --- Core Functions ---
         window.switchView = (view) => {
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
@@ -313,6 +342,7 @@
                 contact: document.getElementById('inputContact').value,
                 status: document.getElementById('inputStatus').value,
                 date: document.getElementById('inputDate').value,
+                followUp: document.getElementById('inputFollowUp').value,
                 expectedSalary: document.getElementById('inputExpected').value,
                 offeredSalary: document.getElementById('inputOffered').value,
                 notes: document.getElementById('inputNotes').value,
@@ -338,6 +368,7 @@
             document.getElementById('inputContact').value = j.contact || '';
             document.getElementById('inputStatus').value = j.status;
             document.getElementById('inputDate').value = j.date;
+            document.getElementById('inputFollowUp').value = j.followUp || '';
             document.getElementById('inputExpected').value = j.expectedSalary || '';
             document.getElementById('inputOffered').value = j.offeredSalary || '';
             document.getElementById('inputNotes').value = j.notes || '';
@@ -354,10 +385,10 @@
                 <div class="detail-item"><div class="detail-label">תאריך הגשה</div><div class="detail-value">${j.date}</div></div>
                 <div class="detail-item"><div class="detail-label">איש קשר / מקור</div><div class="detail-value">${j.contact || '-'}</div></div>
                 <div class="detail-item"><div class="detail-label">לינק</div><div class="detail-value">${j.link ? `<a href="${j.link}" target="_blank" style="color:var(--accent)">🔗 פתח משרה</a>` : '-'}</div></div>
-                <div class="detail-item"><div class="detail-label">שכר מצופה</div><div class="detail-value">${j.expectedSalary ? j.expectedSalary + ' ₪' : '-'}</div></div>
-                <div class="detail-item"><div class="detail-label">שכר שהוצע</div><div class="detail-value">${j.offeredSalary ? j.offeredSalary + ' ₪' : '-'}</div></div>
-                <div class="detail-item full-width"><div class="detail-label">הערות אישיות</div><div class="detail-value" style="white-space:pre-wrap">${j.notes || '-'}</div></div>
-                <div class="detail-item full-width"><div class="detail-label">דרישות התפקיד</div><div class="req-container">${j.requirements || 'אין מידע.'}</div></div>
+                <div class="detail-item"><div class="detail-label">פולו-אפ</div><div class="detail-value">${j.followUp || '-'}</div></div>
+                <div class="detail-item"><div class="detail-label">שכר (מצופה / מוצע)</div><div class="detail-value">${j.expectedSalary || '-'} / ${j.offeredSalary || '-'}</div></div>
+                <div class="detail-item full-width"><div class="detail-label">הערות וצעדים הבאים</div><div class="detail-value" style="white-space:pre-wrap">${j.notes || '-'}</div></div>
+                <div class="detail-item full-width"><div class="detail-label">דרישות התפקיד המלאות</div><div class="req-container">${j.requirements || 'אין מידע לתצוגה.'}</div></div>
             `;
             document.getElementById('viewDetailsContent').innerHTML = content;
             document.getElementById('viewJobModal').style.display = 'flex';
@@ -380,6 +411,7 @@
             });
         };
 
+        // --- Dashboard & Charts ---
         function renderDashboard() {
             renderTable();
             const counts = { sent: 0, pending: 0, interview: 0, rejected: 0 };
@@ -439,7 +471,7 @@
             const blob = new Blob([JSON.stringify(jobs, null, 2)], {type: 'application/json'});
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url; a.download = 'jobOS_Cloud_Backup.json';
+            a.href = url; a.download = 'jobOS_Backup.json';
             a.click();
         };
 
