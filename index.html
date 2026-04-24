@@ -18,6 +18,8 @@
             --success: #38a169;
             --warning: #d69e2e;
             --danger: #e53e3e;
+            --cat-tech: #6b46c1;
+            --cat-general: #2c7a7b;
         }
 
         body {
@@ -28,7 +30,6 @@
             display: flex;
             height: 100vh;
             overflow: hidden;
-            /* מוסתר כברירת מחדל עד להתחברות */
             display: none; 
         }
 
@@ -71,39 +72,62 @@
             border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s;
             box-shadow: 0 4px 6px rgba(49, 130, 206, 0.3);
         }
+        .btn-primary:hover { background-color: #2b6cb0; }
 
         /* === Views === */
         .view-section { display: none; animation: fadeIn 0.3s ease-in-out; }
         .view-section.active-view { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* === Components === */
-        .kpi-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        /* === KPI === */
+        .kpi-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-bottom: 30px; }
         .card { background: var(--card-bg); padding: 25px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-top: 4px solid var(--accent); }
         .card h3 { margin: 0 0 10px 0; font-size: 0.9rem; color: var(--text-muted); }
         .card .value { font-size: 2rem; font-weight: 700; }
+
+        /* === Category KPIs === */
+        .category-kpi-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 30px; }
+        .cat-card {
+            background: var(--card-bg); padding: 20px; border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 15px;
+            border-right: 5px solid;
+        }
+        .cat-card.tech { border-right-color: var(--cat-tech); }
+        .cat-card.general { border-right-color: var(--cat-general); }
+        .cat-icon { font-size: 2rem; }
+        .cat-info h4 { margin: 0 0 4px 0; font-size: 0.85rem; color: var(--text-muted); }
+        .cat-info .cat-value { font-size: 1.6rem; font-weight: 700; }
+        .cat-card.tech .cat-value { color: var(--cat-tech); }
+        .cat-card.general .cat-value { color: var(--cat-general); }
 
         .charts-wrapper { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 30px; height: 300px;}
         .chart-box { background: var(--card-bg); padding: 15px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
 
         .table-wrapper { background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow-x: auto; }
         
-        .filters-container { display: flex; gap: 15px; margin-bottom: 20px; }
-        .search-box, .status-filter { padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
-        .search-box { flex: 1; }
+        .filters-container { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .search-box, .status-filter { padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.95rem; box-sizing: border-box; font-family: 'Rubik', sans-serif; }
+        .search-box { flex: 1; min-width: 150px; }
+        .status-filter { min-width: 130px; }
 
         table { width: 100%; border-collapse: collapse; margin-top: 10px; min-width: 700px; }
         th { text-align: right; padding: 15px; color: var(--text-muted); border-bottom: 2px solid #edf2f7; font-size: 0.9rem; }
-        td { padding: 15px; border-bottom: 1px solid #edf2f7; }
+        td { padding: 15px; border-bottom: 1px solid #edf2f7; vertical-align: middle; }
+        tbody tr:hover { background-color: #f8fafc; }
         
-        .badge { padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; display: inline-block;}
+        .badge { padding: 5px 11px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; display: inline-block; white-space: nowrap; }
         .bg-sent { background-color: #ebf8ff; color: var(--accent); }
         .bg-pending { background-color: #fffff0; color: var(--warning); }
         .bg-interview { background-color: #f0fff4; color: var(--success); }
         .bg-rejected { background-color: #fff5f5; color: var(--danger); }
         
-        .btn-icon { background: none; border: none; cursor: pointer; font-size: 1.2rem; margin-left: 8px; transition: 0.2s; opacity: 0.7; }
-        .btn-icon:hover { opacity: 1; transform: scale(1.1); }
+        /* Category badges */
+        .cat-badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+        .cat-tech-badge { background-color: #faf5ff; color: var(--cat-tech); border: 1px solid #e9d8fd; }
+        .cat-general-badge { background-color: #e6fffa; color: var(--cat-general); border: 1px solid #b2f5ea; }
+
+        .btn-icon { background: none; border: none; cursor: pointer; font-size: 1.1rem; margin-left: 4px; transition: 0.2s; opacity: 0.6; padding: 4px; border-radius: 6px; }
+        .btn-icon:hover { opacity: 1; transform: scale(1.1); background: #f0f2f5; }
 
         /* === MODALS === */
         .modal-overlay {
@@ -117,18 +141,55 @@
         
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .form-group.full-width { grid-column: span 2; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: var(--text-main); }
         .form-group input, .form-group select, .form-group textarea {
-            width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; font-family: inherit;
+            width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; 
+            box-sizing: border-box; font-family: 'Rubik', inherit; font-size: 0.95rem;
+            transition: border-color 0.2s;
         }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(49,130,206,0.1);
+        }
+
+        /* Category selector in form */
+        .category-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .cat-option {
+            border: 2px solid #e2e8f0; border-radius: 10px; padding: 12px 15px; cursor: pointer;
+            transition: all 0.2s; text-align: center; position: relative;
+        }
+        .cat-option:hover { border-color: #a0aec0; }
+        .cat-option.selected-tech { border-color: var(--cat-tech); background: #faf5ff; }
+        .cat-option.selected-general { border-color: var(--cat-general); background: #e6fffa; }
+        .cat-option input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+        .cat-option-icon { font-size: 1.5rem; display: block; margin-bottom: 4px; }
+        .cat-option-label { font-weight: 600; font-size: 0.9rem; }
+        .cat-option-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
 
         /* View Modal Details Styling */
         .view-details-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
         .detail-item { background: #f8fafc; padding: 15px; border-radius: 10px; border: 1px solid #f1f5f9; }
-        .detail-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin-bottom: 5px; }
+        .detail-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
         .detail-value { font-weight: 600; color: var(--text-main); font-size: 1rem; }
         .detail-item.full-width { grid-column: span 2; }
         .req-container { background: #fff; padding: 15px; border: 1px solid #e2e8f0; border-radius: 8px; max-height: 300px; overflow-y: auto; white-space: pre-wrap; font-size: 0.9rem; line-height: 1.6; }
+
+        .modal-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 25px; padding-top: 20px; border-top: 1px solid #edf2f7; }
+        .btn-cancel { background: transparent; border: 1px solid #e2e8f0; color: var(--text-muted); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-family: 'Rubik', sans-serif; font-size: 0.95rem; }
+        .btn-cancel:hover { background: #f7fafc; color: var(--text-main); }
+
+        /* === Progress bar in dashboard === */
+        .progress-section { background: var(--card-bg); padding: 20px 25px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .progress-section h3 { margin: 0 0 15px 0; font-size: 1rem; color: var(--text-main); }
+        .progress-row { display: flex; align-items: center; gap: 15px; margin-bottom: 12px; }
+        .progress-label { width: 110px; font-size: 0.85rem; color: var(--text-muted); flex-shrink: 0; }
+        .progress-bar-bg { flex: 1; height: 8px; background: #edf2f7; border-radius: 10px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; border-radius: 10px; transition: width 0.6s ease; }
+        .progress-count { font-weight: 700; font-size: 0.9rem; min-width: 30px; text-align: left; }
+
+        /* === Empty state === */
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+        .empty-state .empty-icon { font-size: 3rem; margin-bottom: 15px; }
+        .empty-state p { font-size: 1rem; margin: 0 0 20px 0; }
 
         /* === MOBILE RESPONSIVE === */
         @media (max-width: 768px) {
@@ -139,11 +200,14 @@
             .main-content { padding: 15px; }
             .top-bar { flex-direction: column; text-align: center; gap: 15px; }
             .kpi-container { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .category-kpi-container { grid-template-columns: 1fr; }
             .charts-wrapper { grid-template-columns: 1fr; height: auto; }
             .chart-box { height: 250px; }
             .view-details-grid { grid-template-columns: 1fr; }
+            .detail-item.full-width { grid-column: span 1; }
             .form-grid { grid-template-columns: 1fr; }
             .form-group.full-width { grid-column: span 1; }
+            .category-selector { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
@@ -163,12 +227,13 @@
     <div class="main-content">
         <div class="top-bar">
             <div>
-                <h1>ניהול קריירה חכם</h1>
-                <p id="syncStatus" style="color: var(--success); font-weight: 600;">● מאובטח ומסונכרן</p>
+                <h1 style="margin:0 0 4px 0;">ניהול קריירה חכם</h1>
+                <p id="syncStatus" style="color: var(--success); font-weight: 600; margin:0;">● מאובטח ומסונכרן</p>
             </div>
             <button class="btn-primary" onclick="openAddModal()">+ הוסף משרה חדשה</button>
         </div>
 
+        <!-- DASHBOARD VIEW -->
         <div id="view-dashboard" class="view-section active-view">
             <div class="kpi-container">
                 <div class="card"><h3>סה"כ הגשות</h3><div class="value" id="totalJobs">0</div></div>
@@ -177,12 +242,56 @@
                 <div class="card" style="border-top-color: var(--danger);"><h3>סורב</h3><div class="value" id="totalRejected">0</div></div>
             </div>
 
+            <!-- Category KPIs -->
+            <div class="category-kpi-container">
+                <div class="cat-card tech">
+                    <div class="cat-icon">💻</div>
+                    <div class="cat-info">
+                        <h4>קריירה הייטק</h4>
+                        <div class="cat-value" id="catTechCount">0</div>
+                    </div>
+                </div>
+                <div class="cat-card general">
+                    <div class="cat-icon">🏢</div>
+                    <div class="cat-info">
+                        <h4>משרה כללית</h4>
+                        <div class="cat-value" id="catGeneralCount">0</div>
+                    </div>
+                </div>
+            </div>
+
             <div class="charts-wrapper">
                 <div class="chart-box"><canvas id="activityChart"></canvas></div>
                 <div class="chart-box"><canvas id="statusChart"></canvas></div>
             </div>
+
+            <!-- Conversion funnel -->
+            <div class="progress-section">
+                <h3>📈 משפך המועמדות</h3>
+                <div class="progress-row">
+                    <div class="progress-label">נשלח</div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" id="pb-sent" style="background:#3182ce; width:0%"></div></div>
+                    <div class="progress-count" id="pc-sent" style="color:#3182ce">0</div>
+                </div>
+                <div class="progress-row">
+                    <div class="progress-label">ממתין לתשובה</div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" id="pb-pending" style="background:#d69e2e; width:0%"></div></div>
+                    <div class="progress-count" id="pc-pending" style="color:#d69e2e">0</div>
+                </div>
+                <div class="progress-row">
+                    <div class="progress-label">ראיון</div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" id="pb-interview" style="background:#38a169; width:0%"></div></div>
+                    <div class="progress-count" id="pc-interview" style="color:#38a169">0</div>
+                </div>
+                <div class="progress-row">
+                    <div class="progress-label">סורב</div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" id="pb-rejected" style="background:#e53e3e; width:0%"></div></div>
+                    <div class="progress-count" id="pc-rejected" style="color:#e53e3e">0</div>
+                </div>
+            </div>
         </div>
 
+        <!-- JOBS VIEW -->
         <div id="view-jobs" class="view-section">
             <div class="table-wrapper">
                 <div class="filters-container">
@@ -194,12 +303,22 @@
                         <option value="interview">ראיון</option>
                         <option value="rejected">סורב</option>
                     </select>
+                    <select id="filterCategory" class="status-filter" onchange="filterTable()">
+                        <option value="all">כל הקטגוריות</option>
+                        <option value="tech">💻 הייטק</option>
+                        <option value="general">🏢 כללי</option>
+                    </select>
                 </div>
-                <table>
+                <div id="jobsEmptyState" class="empty-state" style="display:none;">
+                    <div class="empty-icon">💼</div>
+                    <p>לא נמצאו משרות תואמות לחיפוש</p>
+                </div>
+                <table id="jobsTable">
                     <thead>
                         <tr>
                             <th>חברה</th>
                             <th>תפקיד</th>
+                            <th>קטגוריה</th>
                             <th>סטטוס</th>
                             <th>תאריך</th>
                             <th>פעולות</th>
@@ -211,16 +330,37 @@
         </div>
     </div>
 
+    <!-- ADD/EDIT JOB MODAL -->
     <div class="modal-overlay" id="jobModal">
         <div class="modal-content">
-            <h2 id="modalTitle">פרטי המשרה</h2>
+            <h2 id="modalTitle" style="margin-top:0; border-bottom: 2px solid var(--accent); padding-bottom: 12px;">פרטי המשרה</h2>
             <form id="jobForm" onsubmit="saveJob(event)">
                 <input type="hidden" id="inputId">
                 <div class="form-grid">
-                    <div class="form-group"><label>חברה *</label><input type="text" id="inputCompany" required></div>
-                    <div class="form-group"><label>תפקיד *</label><input type="text" id="inputRole" required></div>
+                    <div class="form-group"><label>חברה *</label><input type="text" id="inputCompany" required placeholder="שם החברה"></div>
+                    <div class="form-group"><label>תפקיד *</label><input type="text" id="inputRole" required placeholder="שם התפקיד"></div>
+                    
+                    <!-- Category selector - full width -->
+                    <div class="form-group full-width">
+                        <label>קטגוריה *</label>
+                        <div class="category-selector">
+                            <label class="cat-option" id="cat-tech-option">
+                                <input type="radio" name="category" id="inputCategoryTech" value="tech" onchange="updateCatSelection()" required>
+                                <span class="cat-option-icon">💻</span>
+                                <div class="cat-option-label">קריירה הייטק</div>
+                                <div class="cat-option-sub">פיתוח, דאטה, פרודקט ועוד</div>
+                            </label>
+                            <label class="cat-option" id="cat-general-option">
+                                <input type="radio" name="category" id="inputCategoryGeneral" value="general" onchange="updateCatSelection()">
+                                <span class="cat-option-icon">🏢</span>
+                                <div class="cat-option-label">משרה כללית</div>
+                                <div class="cat-option-sub">מכירות, שיווק, מנהלה ועוד</div>
+                            </label>
+                        </div>
+                    </div>
+
                     <div class="form-group"><label>לינק למשרה (URL)</label><input type="url" id="inputLink" placeholder="https://..."></div>
-                    <div class="form-group"><label>איש קשר / מגייס</label><input type="text" id="inputContact"></div>
+                    <div class="form-group"><label>איש קשר / מגייס</label><input type="text" id="inputContact" placeholder="שם, LinkedIn..."></div>
                     <div class="form-group">
                         <label>סטטוס</label>
                         <select id="inputStatus">
@@ -230,33 +370,33 @@
                             <option value="rejected">סורב</option>
                         </select>
                     </div>
-                    <div class="form-group"><label>תאריך הגשה</label><input type="date" id="inputDate" required></div>
-                    <div class="form-group"><label>שכר מצופה</label><input type="number" id="inputExpected"></div>
-                    <div class="form-group"><label>שכר שהוצע</label><input type="number" id="inputOffered"></div>
+                    <div class="form-group"><label>תאריך הגשה *</label><input type="date" id="inputDate" required></div>
+                    <div class="form-group"><label>שכר מצופה (₪)</label><input type="number" id="inputExpected" placeholder="0"></div>
+                    <div class="form-group"><label>שכר שהוצע (₪)</label><input type="number" id="inputOffered" placeholder="0"></div>
                     <div class="form-group"><label>תאריך פולו-אפ</label><input type="date" id="inputFollowUp"></div>
-                    <div class="form-group full-width"><label>הערות אישיות / Next Steps</label><textarea id="inputNotes" rows="2"></textarea></div>
-                    <div class="form-group full-width"><label>תיאור ודרישות תפקיד מלאות</label><textarea id="inputRequirements" rows="6"></textarea></div>
+                    <div class="form-group full-width"><label>הערות אישיות / Next Steps</label><textarea id="inputNotes" rows="2" placeholder="מה הצעד הבא? על מה לדבר בראיון?"></textarea></div>
+                    <div class="form-group full-width"><label>תיאור ודרישות תפקיד מלאות</label><textarea id="inputRequirements" rows="6" placeholder="הדבק כאן את תיאור המשרה המלא..."></textarea></div>
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn-cancel" onclick="closeModal('jobModal')">ביטול</button>
-                    <button type="submit" class="btn-primary">שמור משרה</button>
+                    <button type="submit" class="btn-primary">💾 שמור משרה</button>
                 </div>
             </form>
         </div>
     </div>
 
+    <!-- VIEW JOB MODAL -->
     <div class="modal-overlay" id="viewJobModal">
         <div class="modal-content">
-            <h2 id="viewTitle" style="border-bottom: 2px solid var(--accent); padding-bottom: 10px;">פרטי משרה</h2>
+            <h2 id="viewTitle" style="border-bottom: 2px solid var(--accent); padding-bottom: 10px; margin-top:0;">פרטי משרה</h2>
             <div class="view-details-grid" id="viewDetailsContent"></div>
             <div class="modal-actions">
-                <button type="button" class="btn-cancel" style="width: 100%;" onclick="closeModal('viewJobModal')">סגור</button>
+                <button type="button" class="btn-cancel" style="flex:1;" onclick="closeModal('viewJobModal')">סגור</button>
             </div>
         </div>
     </div>
 
     <script type="module">
-        // Firebase Auth & Database Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -283,14 +423,12 @@
         function init() {
             onAuthStateChanged(auth, (user) => {
                 if (user) {
-                    // המשתמש מחובר - הצג את האתר וטען נתונים
                     document.body.style.display = "flex"; 
                     onValue(jobsRef, (snapshot) => {
                         jobs = snapshot.val() || [];
                         renderDashboard();
                     });
                 } else {
-                    // לא מחובר - הסתר הכל ובקש התחברות
                     document.body.style.display = "none";
                     window.login();
                 }
@@ -322,10 +460,23 @@
             document.getElementById('nav-' + view).classList.add('active');
         };
 
+        window.updateCatSelection = () => {
+            const techOpt = document.getElementById('cat-tech-option');
+            const genOpt = document.getElementById('cat-general-option');
+            const isTech = document.getElementById('inputCategoryTech').checked;
+            const isGen = document.getElementById('inputCategoryGeneral').checked;
+            techOpt.className = 'cat-option' + (isTech ? ' selected-tech' : '');
+            genOpt.className = 'cat-option' + (isGen ? ' selected-general' : '');
+        };
+
         window.openAddModal = () => {
             document.getElementById('jobForm').reset();
             document.getElementById('inputId').value = '';
             document.getElementById('inputDate').valueAsDate = new Date();
+            document.getElementById('modalTitle').textContent = '➕ הוסף משרה חדשה';
+            // Reset category selection visuals
+            document.getElementById('cat-tech-option').className = 'cat-option';
+            document.getElementById('cat-general-option').className = 'cat-option';
             document.getElementById('jobModal').style.display = 'flex';
         };
 
@@ -334,10 +485,12 @@
         window.saveJob = (e) => {
             e.preventDefault();
             const id = document.getElementById('inputId').value;
+            const catRadio = document.querySelector('input[name="category"]:checked');
             const data = {
                 id: id ? parseInt(id) : Date.now(),
                 company: document.getElementById('inputCompany').value,
                 role: document.getElementById('inputRole').value,
+                category: catRadio ? catRadio.value : 'general',
                 link: document.getElementById('inputLink').value,
                 contact: document.getElementById('inputContact').value,
                 status: document.getElementById('inputStatus').value,
@@ -373,24 +526,35 @@
             document.getElementById('inputOffered').value = j.offeredSalary || '';
             document.getElementById('inputNotes').value = j.notes || '';
             document.getElementById('inputRequirements').value = j.requirements || '';
+            document.getElementById('modalTitle').textContent = '✏️ עריכת משרה';
+            
+            // Set category
+            const cat = j.category || 'general';
+            document.getElementById(cat === 'tech' ? 'inputCategoryTech' : 'inputCategoryGeneral').checked = true;
+            window.updateCatSelection();
+
             document.getElementById('jobModal').style.display = 'flex';
         };
 
         window.openViewModal = (id) => {
             const j = jobs.find(x => x.id === id);
+            const catLabel = j.category === 'tech' ? '<span class="cat-badge cat-tech-badge">💻 קריירה הייטק</span>' : '<span class="cat-badge cat-general-badge">🏢 משרה כללית</span>';
             const content = `
                 <div class="detail-item"><div class="detail-label">חברה</div><div class="detail-value">${j.company}</div></div>
                 <div class="detail-item"><div class="detail-label">תפקיד</div><div class="detail-value">${j.role}</div></div>
+                <div class="detail-item"><div class="detail-label">קטגוריה</div><div class="detail-value">${catLabel}</div></div>
                 <div class="detail-item"><div class="detail-label">סטטוס</div><div class="detail-value"><span class="badge bg-${j.status}">${translate(j.status)}</span></div></div>
                 <div class="detail-item"><div class="detail-label">תאריך הגשה</div><div class="detail-value">${j.date}</div></div>
+                <div class="detail-item"><div class="detail-label">פולו-אפ</div><div class="detail-value">${j.followUp || '-'}</div></div>
                 <div class="detail-item"><div class="detail-label">איש קשר / מקור</div><div class="detail-value">${j.contact || '-'}</div></div>
                 <div class="detail-item"><div class="detail-label">לינק</div><div class="detail-value">${j.link ? `<a href="${j.link}" target="_blank" style="color:var(--accent)">🔗 פתח משרה</a>` : '-'}</div></div>
-                <div class="detail-item"><div class="detail-label">פולו-אפ</div><div class="detail-value">${j.followUp || '-'}</div></div>
-                <div class="detail-item"><div class="detail-label">שכר (מצופה / מוצע)</div><div class="detail-value">${j.expectedSalary || '-'} / ${j.offeredSalary || '-'}</div></div>
+                <div class="detail-item"><div class="detail-label">שכר מצופה</div><div class="detail-value">${j.expectedSalary ? '₪'+Number(j.expectedSalary).toLocaleString() : '-'}</div></div>
+                <div class="detail-item"><div class="detail-label">שכר שהוצע</div><div class="detail-value">${j.offeredSalary ? '₪'+Number(j.offeredSalary).toLocaleString() : '-'}</div></div>
                 <div class="detail-item full-width"><div class="detail-label">הערות וצעדים הבאים</div><div class="detail-value" style="white-space:pre-wrap">${j.notes || '-'}</div></div>
                 <div class="detail-item full-width"><div class="detail-label">דרישות התפקיד המלאות</div><div class="req-container">${j.requirements || 'אין מידע לתצוגה.'}</div></div>
             `;
             document.getElementById('viewDetailsContent').innerHTML = content;
+            document.getElementById('viewTitle').textContent = `${j.company} — ${j.role}`;
             document.getElementById('viewJobModal').style.display = 'flex';
         };
 
@@ -404,40 +568,76 @@
         window.filterTable = () => {
             const q = document.getElementById('searchJobs').value.toLowerCase();
             const s = document.getElementById('filterStatus').value;
+            const c = document.getElementById('filterCategory').value;
+            let visibleCount = 0;
             document.querySelectorAll('#jobsTableBody tr').forEach(row => {
                 const text = row.innerText.toLowerCase().includes(q);
                 const stat = s === 'all' || row.dataset.status === s;
-                row.style.display = (text && stat) ? '' : 'none';
+                const cat = c === 'all' || row.dataset.category === c;
+                const show = text && stat && cat;
+                row.style.display = show ? '' : 'none';
+                if (show) visibleCount++;
             });
+            document.getElementById('jobsEmptyState').style.display = visibleCount === 0 ? 'block' : 'none';
+            document.getElementById('jobsTable').style.display = visibleCount === 0 ? 'none' : '';
         };
 
         // --- Dashboard & Charts ---
         function renderDashboard() {
             renderTable();
             const counts = { sent: 0, pending: 0, interview: 0, rejected: 0 };
-            jobs.forEach(j => { if(counts[j.status] !== undefined) counts[j.status]++; });
+            let techCount = 0, generalCount = 0;
+            jobs.forEach(j => {
+                if(counts[j.status] !== undefined) counts[j.status]++;
+                if(j.category === 'tech') techCount++;
+                else generalCount++;
+            });
             
             document.getElementById('totalJobs').innerText = jobs.length;
             document.getElementById('totalInterviews').innerText = counts.interview;
             document.getElementById('totalPending').innerText = counts.pending + counts.sent;
             document.getElementById('totalRejected').innerText = counts.rejected;
+            document.getElementById('catTechCount').innerText = techCount;
+            document.getElementById('catGeneralCount').innerText = generalCount;
+
+            // Progress bars
+            const total = jobs.length || 1;
+            ['sent','pending','interview','rejected'].forEach(s => {
+                const pct = Math.round((counts[s] / total) * 100);
+                document.getElementById('pb-'+s).style.width = pct + '%';
+                document.getElementById('pc-'+s).innerText = counts[s];
+            });
+
             updateCharts(counts);
         }
 
         function renderTable() {
-            document.getElementById('jobsTableBody').innerHTML = jobs.map(j => `
-                <tr data-status="${j.status}">
+            if (jobs.length === 0) {
+                document.getElementById('jobsEmptyState').style.display = 'block';
+                document.getElementById('jobsTable').style.display = 'none';
+                document.getElementById('jobsTableBody').innerHTML = '';
+                return;
+            }
+            document.getElementById('jobsEmptyState').style.display = 'none';
+            document.getElementById('jobsTable').style.display = '';
+            document.getElementById('jobsTableBody').innerHTML = jobs.map(j => {
+                const catBadge = j.category === 'tech'
+                    ? '<span class="cat-badge cat-tech-badge">💻 הייטק</span>'
+                    : '<span class="cat-badge cat-general-badge">🏢 כללי</span>';
+                return `
+                <tr data-status="${j.status}" data-category="${j.category || 'general'}">
                     <td><strong>${j.company}</strong></td>
                     <td>${j.role}</td>
+                    <td>${catBadge}</td>
                     <td><span class="badge bg-${j.status}">${translate(j.status)}</span></td>
                     <td>${j.date}</td>
                     <td>
-                        <button class="btn-icon" onclick="openViewModal(${j.id})">👁️</button>
-                        <button class="btn-icon" onclick="openEditModal(${j.id})">✏️</button>
-                        <button class="btn-icon" onclick="deleteJob(${j.id})">🗑️</button>
+                        <button class="btn-icon" onclick="openViewModal(${j.id})" title="הצג פרטים">👁️</button>
+                        <button class="btn-icon" onclick="openEditModal(${j.id})" title="עריכה">✏️</button>
+                        <button class="btn-icon" onclick="deleteJob(${j.id})" title="מחיקה">🗑️</button>
                     </td>
                 </tr>
-            `).join('');
+            `}).join('');
         }
 
         function updateCharts(s) {
@@ -447,9 +647,9 @@
                 type: 'doughnut',
                 data: {
                     labels: ['נשלח', 'ממתין', 'ראיון', 'סורב'],
-                    datasets: [{ data: [s.sent, s.pending, s.interview, s.rejected], backgroundColor: ['#3182ce', '#d69e2e', '#38a169', '#e53e3e'] }]
+                    datasets: [{ data: [s.sent, s.pending, s.interview, s.rejected], backgroundColor: ['#3182ce', '#d69e2e', '#38a169', '#e53e3e'], borderWidth: 0 }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { family: 'Rubik' } } } } }
             });
 
             const ctxA = document.getElementById('activityChart').getContext('2d');
@@ -461,9 +661,9 @@
                 type: 'bar',
                 data: {
                     labels: sortedDates,
-                    datasets: [{ label: 'הגשות', data: sortedDates.map(d => dates[d]), backgroundColor: '#2d3748', borderRadius: 5 }]
+                    datasets: [{ label: 'הגשות', data: sortedDates.map(d => dates[d]), backgroundColor: '#2d3748', borderRadius: 6, borderSkipped: false }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1, font: { family: 'Rubik' } } } }, plugins: { legend: { labels: { font: { family: 'Rubik' } } } } }
             });
         }
 
